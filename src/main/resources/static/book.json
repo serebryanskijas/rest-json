@@ -1,0 +1,19 @@
+[ {
+  "id" : 1,
+  "title" : "Thinking in Java",
+  "isbn" : "978-0131872486",
+  "year" : 1998,
+  "authors" : [ "Bruce Eckel", "John Doe" ]
+}, {
+  "id" : 2,
+  "title" : "Things Fall Apart",
+  "isbn" : "978-0131872486",
+  "year" : 2000,
+  "authors" : [ "Chinua Achebe" ]
+}, {
+  "id" : 3,
+  "title" : "Fairy tales",
+  "isbn" : "978-0131872486",
+  "year" : 1836,
+  "authors" : [ "Andersen" ]
+} ]
