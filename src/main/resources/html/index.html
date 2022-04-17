@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Books</title>
+    <script src="js/jquery.js"></script>
+    
+</head>
+<body>
+    <div id="container"></div>
+
+
+    <script>
+        var table =$('<table>');
+        $('#container').append(table);
+        var tbody=$('<tbody>');
+        table.append(tbody);
+
+        var requestOptions = {method:'GET',redirect:'follow'};
+        fetch("http://127.0.0.1:8080/books", requestOptions)
+        .then(response=>response.json())
+        .then(response=>showBook(response));
+
+        function showBook(response){
+            //Zagolovok
+            var tr = $('<tr>');
+                tbody.append(tr);
+                tr.append($('<th>').html('Title'));
+                tr.append($('<th>').html('Isbn'));
+                tr.append($('<th>').html('Year'));
+                tr.append($('<th>').html('Authors'));
+
+                //Data
+            for (let i=0; i<response.length; i++){
+                var tr = $('<tr>');
+                tbody.append(tr);
+                var title = $('<td>').html(response[i].title);
+                var isbn = $('<td>').html(response[i].isbn);
+                var year = $('<td>').html(response[i].year);
+                var authors = $('<td>').html(response[i].authors);
+                    tr.append(title);
+                    tr.append(isbn);
+                    tr.append(year);
+                    tr.append(authors);
+                    tbody.append(tr);
+            }
+        }
+    </script>
+</body>
+</html>
