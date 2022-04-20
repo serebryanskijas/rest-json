@@ -6,47 +6,133 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Books</title>
     <script src="js/jquery.js"></script>
+    <script src="js/all.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="css/bootstrap.min.css"></link>
+    
     
 </head>
 <body>
     <div id="container"></div>
+    <div class="m-3">
+        <button type="button" id="addBook" class="btn btn-label btn-success"
+            data-bs-toggle="modal" data-bs-target="#modalAdd">
+            <span class="btn-label">
+                <i class="fa fa-check"></i>
+            </span>
+            Add book
+        </button>
+    </div>
+        <div class="modal" tabindex="-1" id="modalAdd">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title">Add book</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  <div class="input-group mb-3">
+                      <input type="text" id="Id" class="form-control"
+                      placeholder="id">
+                  </div>
+                  <div class="input-group mb-3">
+                    <input type="text" id="Title" class="form-control"
+                    placeholder="Title">
+                </div>
+                <div class="input-group mb-3">
+                    <input type="text" id="ISBN" class="form-control"
+                    placeholder="ISBN" value="123-456-789">
+                </div>
+                <div class="input-group mb-3">
+                    <input type="text" id="Year" class="form-control"
+                    placeholder="Year">
+                </div>
+                <div class="input-group mb-3">
+                    <input type="text" id="Authors" class="form-control"
+                    placeholder="Authors">
+                </div>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                  <button type="button" class="btn btn-primary" id="buttonAdd">Ok</button>
+                </div>
+              </div>
+            </div>
+          </div>
 
+          <div class="modal" tabindex="-1" id="modalDelete">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title">Delete book</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  <p>Are you sure?</p>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                  <button type="button" class="btn btn-primary" id="buttonDelete">Ok</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal" tabindex="-1" id="modalUpdate">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title">Update book</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                <div class="input-group mb-3">
+                    <input type="text" id="Title" class="form-control"
+                    placeholder="Title">
+                </div>
+                <div class="input-group mb-3">
+                    <input type="text" id="ISBN" class="form-control"
+                    placeholder="ISBN" value="123-456-789">
+                </div>
+                <div class="input-group mb-3">
+                    <input type="text" id="Year" class="form-control"
+                    placeholder="Year">
+                </div>
+                <div class="input-group mb-3">
+                    <input type="text" id="Authors" class="form-control"
+                    placeholder="Authors">
+                </div>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                  <button type="button" class="btn btn-primary" id="buttonUpdate">Ok</button>
+                </div>
+              </div>
+            </div>
+          </div>
+    <script src="js/showbooks.js"></script>
+    <script src="js/addBooks.js"></script>
+    <script src="js/deleteBook.js"></script>
 
     <script>
-        var table =$('<table>');
-        $('#container').append(table);
-        var tbody=$('<tbody>');
-        table.append(tbody);
+      $(document).on('click','#buttonUpdate',
+async function(){
+    let id=$('#modalAdd #Id').val();
+    let title=$('#modalAdd #Title').val();
+    let isbn=$('#modalAdd #ISBN').val();
+    let year=$('#modalAdd #Year').val();
+    let authors=[].concat($('#modalAdd #Authors').val());
 
-        var requestOptions = {method:'GET',redirect:'follow'};
-        fetch("http://127.0.0.1:8080/books", requestOptions)
-        .then(response=>response.json())
-        .then(response=>showBook(response));
+    var requestOptions = {method:'POST',
+         headers:{'Content-Type':'application/json'},
+         body:JSON.stringify({id,title,isbn,year,authors})};
 
-        function showBook(response){
-            //Zagolovok
-            var tr = $('<tr>');
-                tbody.append(tr);
-                tr.append($('<th>').html('Title'));
-                tr.append($('<th>').html('Isbn'));
-                tr.append($('<th>').html('Year'));
-                tr.append($('<th>').html('Authors'));
+ fetch("http://127.0.0.1:8080/books", requestOptions)
+ .catch(error=>console.log('error', error));
 
-                //Data
-            for (let i=0; i<response.length; i++){
-                var tr = $('<tr>');
-                tbody.append(tr);
-                var title = $('<td>').html(response[i].title);
-                var isbn = $('<td>').html(response[i].isbn);
-                var year = $('<td>').html(response[i].year);
-                var authors = $('<td>').html(response[i].authors);
-                    tr.append(title);
-                    tr.append(isbn);
-                    tr.append(year);
-                    tr.append(authors);
-                    tbody.append(tr);
-            }
-        }
+ $('#madalAdd').modal().hide();
+ location.reload();
+});
     </script>
 </body>
 </html>
