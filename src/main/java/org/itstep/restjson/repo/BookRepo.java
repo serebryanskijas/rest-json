@@ -8,10 +8,12 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import org.itstep.restjson.model.Book;
+import org.itstep.restjson.model.BookExt;
 
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 public class BookRepo {
@@ -21,16 +23,29 @@ public class BookRepo {
     @Getter
     private List<Book> books = null;
 
-    public BookRepo(String fileName){
+    public BookRepo(String fileName) {
         this.fileName = fileName;
     }
 
     //Read books from file
-    public void readFile(){
+    public void readFile() {
         try {
-            // map = mapper.readValue(Paths.get(fileName).toFile(), Map.class);  // convert JSON file to map
-            books = mapper.readValue(Paths.get(fileName).toFile(),
-                    new TypeReference<List<Book>>() {});
+            List<BookExt> booksExt = mapper.readValue(
+                    Paths.get("src/main/resources/static/books100.json").toFile(),
+                    new TypeReference<List<BookExt>>() {
+                    });
+
+            int[] index = {0};
+            books = booksExt.stream()
+                    .map(bookExt -> new Book(index[0]++,
+                            bookExt.getTitle(),
+                            "111-222-333",
+                            bookExt.getYear(),
+                            new String[]{bookExt.getAuthor()}))
+                    .collect(Collectors.toList());
+
+           /* books = mapper.readValue(Paths.get(fileName).toFile(),
+                    new TypeReference<List<Book>>() {});*/
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -44,16 +59,16 @@ public class BookRepo {
     }
 
     //Get all books
-    public List<Book> getAllBooks(){
+    public List<Book> getAllBooks() {
         readFile();
         return books;
     }
 
     //Get book by id
-    public Book getBookById(int id){
+    public Book getBookById(int id) {
         readFile();
         return books.stream()
-                .filter(b->b.getId()==id)
+                .filter(b -> b.getId() == id)
                 .findAny()
                 .orElse(null);
     }
@@ -74,7 +89,7 @@ public class BookRepo {
     public void updateBook(Book newBook) throws IOException {
         readFile();
         Book book = books.stream()
-                .filter(b->b.getId()==newBook.getId())
+                .filter(b -> b.getId() == newBook.getId())
                 .findAny()
                 .orElse(null);
         books.set(books.indexOf(book), newBook);
@@ -84,7 +99,7 @@ public class BookRepo {
     public void deleteBook(int id) throws IOException {
         readFile();
         Book book = books.stream()
-                .filter(b->b.getId()==id)
+                .filter(b -> b.getId() == id)
                 .findAny()
                 .orElse(null);
         books.remove(book);
@@ -92,20 +107,34 @@ public class BookRepo {
     }
 
     @SneakyThrows
-    public String toString(){
+    public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append('[');
         ObjectWriter objectWriter = new ObjectMapper().writer().withDefaultPrettyPrinter();
-        books.forEach(book-> {
+        books.forEach(book -> {
             try {
                 String json = objectWriter.writeValueAsString(book);
-                sb.append(json+",\n");
+                sb.append(json + ",\n");
             } catch (JsonProcessingException e) {
                 e.printStackTrace();
             }
         });
-        sb.delete(sb.length()-2,sb.length()-1);
+        sb.delete(sb.length() - 2, sb.length() - 1);
         sb.append(']');
         return sb.toString();
+    }
+
+    public List<Book> getBookPage(int limit, int offset) {
+        readFile();
+        List<Book> page = books.subList(offset, offset + limit);
+        return page;
+    }
+
+    public List<Book> searchBook(String title) {
+        readFile();
+        List<Book> founded = books.stream()
+                .filter(book ->book.getTitle().toUpperCase().contains(title.toUpperCase()))
+                .collect(Collectors.toList());
+        return founded;
     }
 }

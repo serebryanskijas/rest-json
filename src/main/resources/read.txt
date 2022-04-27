@@ -1,0 +1,23 @@
+cd /d C:\Users\гк\IdeaProjects\rest-json\src\main\resources\temp\curl-7.83.0-win64-mingw
+//получить список всех книг
+curl http://localhost:8080/books
+
+//получить первые 10 книг
+curl "http://localhost:8080/books/page?limit=10&offset=0"
+curl "http://localhost:8080/books/page?limit=10&offset=0" | python -m json.tool
+
+//Найти книгу
+curl "http://localhost:8080/books/search?title=man"
+
+//Получить по id
+curl "http://localhost:8080/books/3"
+
+//Add book
+curl -H "Content-type: application/json"^
+-X POST "http://localhost:8080/books"^
+-d "{\"id\":200, \"title\":\"title\", \"isbn\":\"isbn\", \"year\":2000, \"authors\":[\"author\"]}
+
+//set Book
+curl -H "Content-type: application/json" ^
+-X PUT "http://localhost:8080/books/200" ^
+-d "{\"id\":200, \"title\":\"title\", \"isbn\":\"isbn\", \"year\":2001, \"authors\":[\"author\"]}

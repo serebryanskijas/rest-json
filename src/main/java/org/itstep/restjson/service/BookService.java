@@ -19,7 +19,7 @@ public class BookService {
 
     }
 
-    public Book getBookById(int id){
+    public Book getBookById(int id) {
         return bookRepo.getBookById(id);
     }
 
@@ -27,11 +27,19 @@ public class BookService {
         bookRepo.addBook(book);
     }
 
-    public void updateBook (Book book) throws IOException {
+    public void updateBook(Book book) throws IOException {
         bookRepo.updateBook(book);
     }
 
-    public void deleteBook (int id) throws IOException {
+    public void deleteBook(int id) throws IOException {
         bookRepo.deleteBook(id);
+    }
+
+    public List<Book> getBookPage(int limit, int offset) {
+        return bookRepo.getBookPage(limit, offset);
+    }
+
+    public List<Book> searchBook(String title) {
+        return bookRepo.searchBook(title);
     }
 }

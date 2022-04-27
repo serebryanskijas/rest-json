@@ -29,8 +29,7 @@ public class BookRestController {
         try {
             Book book = bookService.getBookById(id);
             return new ResponseEntity<Book>(book, HttpStatus.OK);
-        }
-        catch (NoSuchElementException e) {
+        } catch (NoSuchElementException e) {
             return new ResponseEntity<Book>(HttpStatus.NOT_FOUND);
         }
     }
@@ -41,13 +40,12 @@ public class BookRestController {
     }
 
     @PutMapping("/books/{id}")
-    public ResponseEntity<?> updateBook(@RequestBody Book book, @PathVariable int id){
+    public ResponseEntity<?> updateBook(@RequestBody Book book, @PathVariable int id) {
         try {
             book.setId(id);
             bookService.updateBook(book);
             return new ResponseEntity<>(HttpStatus.OK);
-        }
-        catch (NoSuchElementException | IOException e) {
+        } catch (NoSuchElementException | IOException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
@@ -55,5 +53,17 @@ public class BookRestController {
     @DeleteMapping("/books/{id}")
     public void deleteBook(@PathVariable int id) throws IOException {
         bookService.deleteBook(id);
+    }
+
+    @GetMapping("books/page")
+    //books/page?limit=10&offset=0
+    public List<Book> getBookPage(@RequestParam("limit") int limit,
+                                  @RequestParam("offset") int offset) {
+        return bookService.getBookPage(limit, offset);
+    }
+
+    @GetMapping("books/search")
+    public List<Book> searchBook(@RequestParam("title") String title) {
+    return bookService.searchBook(title);
     }
 }
