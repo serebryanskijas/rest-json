@@ -17,9 +17,9 @@
   <nav class="navbar navbar-light bg-light col-md-6">
     <div class="container-fluid">
       <a class="navbar-brand">Navbar</a>
-      <form class="d-flex">
-        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-        <button class="btn btn-outline-success" type="submit">Search</button>
+      <form class="d-flex" action="javascript:search()" name="form">
+        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="text">
+        <button class="btn btn-outline-success" type="submit" id="search">Search</button>
       </form>
     </div>
   </nav> 
@@ -120,7 +120,7 @@
             </div>
           </div>
 <nav aria-label="Page navigation example">
-  <ul class="pagination">
+  <ul class="pagination" id="pagination">
     <li class="page-item"><a class="page-link" href="#">Previous</a></li>
     <li class="page-item"><a class="page-link" href="#">1</a></li>
     <li class="page-item"><a class="page-link" href="#">2</a></li>
@@ -132,9 +132,27 @@
     <script src="js/addBooks.js"></script>
     <script src="js/deleteBook.js"></script>
     <script src="js/updateBook.js"></script>
+    <script src="js/search.js"></script>
+    <script src="js/pagination.js"></script>
 
-    <script>
-    
+  <script>
+                 
+  showPagination(1);
+  showBooks(10,0);
+
+  function showBooks(limit, offset){
+    container.empty();
+    table.empty();
+    tbody.empty();
+    table.addClass('table table-striped m-3');
+    container.append(table);
+    table.append(tbody);
+
+    var requestOptions = {method:'GET',redirect:'follow'};
+        fetch(`http://127.0.0.1:8080/books/page?limit=${limit}&offset=${offset}`, requestOptions)
+        .then(response=>response.json())
+        .then(response=>showBook(response));
+  }
     </script>
 </body>
 </html>

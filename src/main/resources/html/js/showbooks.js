@@ -1,13 +1,11 @@
+var container = $('container');
 var table =$('<table>');
         table.addClass('table table-striped m-3');
         $('#container').append(table);
         var tbody=$('<tbody>');
         table.append(tbody);
 
-        var requestOptions = {method:'GET',redirect:'follow'};
-        fetch("http://127.0.0.1:8080/books", requestOptions)
-        .then(response=>response.json())
-        .then(response=>showBook(response));
+        
 
         function showBook(response){
             //Zagolovok
